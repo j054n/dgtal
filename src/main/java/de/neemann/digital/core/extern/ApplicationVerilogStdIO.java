@@ -115,7 +115,7 @@ public abstract class ApplicationVerilogStdIO implements Application {
                 scanParamArgs(st, par);
             }
 
-            attributes.set(Keys.EXTERNAL_PARAMETERS, par.toString());
+            //attributes.set(Keys.EXTERNAL_PARAMETERS, par.toString());
         
             match(Token.OPENPAR, "'('", st);
 
