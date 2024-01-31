@@ -60,6 +60,7 @@ public abstract class ApplicationVerilogStdIO implements Application {
      * @param code    the verilog code
      * @param inputs  the inputs
      * @param outputs the outputs
+     * @param parameters the parameters
      * @param root    the projects main folder
      * @return the verilog code
      * @throws HGSEvalException HGSEvalException
@@ -82,6 +83,14 @@ public abstract class ApplicationVerilogStdIO implements Application {
         currToken = st.nextToken();
     }
 
+    private boolean match0(Token tkExpect, String tkText, VerilogTokenizer st) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
+        if (currToken != tkExpect) {
+            return false;
+        }
+        currToken = st.nextToken();
+        return true;   
+    }
+
     @Override
     public boolean ensureConsistency(ElementAttributes attributes, File root) {
         try {
@@ -90,6 +99,7 @@ public abstract class ApplicationVerilogStdIO implements Application {
 
             PortDefinition in;
             PortDefinition out;
+            ParamDefinition par;
             String label;
 
             currToken = st.nextToken();
@@ -97,18 +107,28 @@ public abstract class ApplicationVerilogStdIO implements Application {
             match(Token.MODULE, "keyword 'module'", st);
             label = st.value();
             match(Token.IDENT, "identifier", st);
+
+            par = new ParamDefinition("");
+
+            if (match0(Token.HASH, "'#'", st)) {
+                match(Token.OPENPAR, "'('", st);
+                scanParamArgs(st, par);
+            }
+
+            attributes.set(Keys.EXTERNAL_PARAMETERS, par.toString());
+        
             match(Token.OPENPAR, "'('", st);
 
             in = new PortDefinition("");
             out = new PortDefinition("");
-            scanPortArgs(st, in, out);
+            scanPortArgs(st, in, out, par);
 
             if (currToken == Token.SEMICOLON) {
                 if (in.size() == 0 && out.size() == 0) {
                     do {
                         currToken = st.nextToken();
                         if (currToken == Token.INPUT || currToken == Token.OUTPUT)
-                            scanPort(st, in, out);
+                            scanPort(st, in, out, par);
                     } while ((currToken != Token.ENDMODULE) && (currToken != Token.EOF));
                 }
             } else {
@@ -128,15 +148,21 @@ public abstract class ApplicationVerilogStdIO implements Application {
         }
     }
 
-    private void scanPortArgs(VerilogTokenizer st, PortDefinition in, PortDefinition out) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
+    private void scanParamArgs(VerilogTokenizer st, ParamDefinition par) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
         while (true) {
             switch (currToken) {
                 case IDENT:
                     currToken = st.nextToken();
                     break;
-                case INPUT:
-                case OUTPUT:
-                    scanPort(st, in, out);
+                case EQ:
+                    currToken = st.nextToken();
+                    break;
+                case NUMBER:
+                    currToken = st.nextToken();
+                    break;
+                case PARAMETER:
+                    scanParam(st, par);
+                    currToken = st.nextToken();
                     break;
                 case CLOSEPAR:
                     currToken = st.nextToken();
@@ -150,30 +176,12 @@ public abstract class ApplicationVerilogStdIO implements Application {
         }
     }
 
-    private void scanPort(VerilogTokenizer st, PortDefinition in, PortDefinition out) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
-        boolean isInput;
+    private void scanParam(VerilogTokenizer st, ParamDefinition par) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
 
-        switch (currToken) {
-            case INPUT:
-                isInput = true;
-                currToken = st.nextToken();
-                if (currToken == Token.WIRE) {
-                    currToken = st.nextToken();
-                }
-                break;
-            case OUTPUT:
-                isInput = false;
-                currToken = st.nextToken();
-                if (currToken == Token.WIRE
-                        || currToken == Token.REG) {
-                    currToken = st.nextToken();
-                }
-                break;
-            default:
-                throw new ParseException("unexpected '" + st.value() + "'");
+        if (currToken == Token.PARAMETER) {
+            currToken = st.nextToken();
         }
-
-        int bits = 1;
+        int bits = 32;
         if (currToken == Token.OPENBRACKET) {
             match(Token.OPENBRACKET, "", st);
             String rangeStart = st.value();
@@ -184,6 +192,158 @@ public abstract class ApplicationVerilogStdIO implements Application {
             match(Token.CLOSEBRACKET, "']'", st);
             bits = (Integer.parseInt(rangeStart) - Integer.parseInt(rangeEnd)) + 1;
         }
+        String name = st.value();
+        match(Token.IDENT, "identifier", st);
+        
+        match(Token.EQ, "'='", st);
+        //match(Token.NUMBER, "a number", st);
+        int val = Integer.parseInt(st.value());
+        par.addParam(name, bits, val);
+    }
+
+    private void scanPortArgs(VerilogTokenizer st, PortDefinition in, PortDefinition out, ParamDefinition par) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
+        while (true) {
+            switch (currToken) {
+                case IDENT:
+                    currToken = st.nextToken();
+                    break;
+                case INPUT:
+                case OUTPUT:
+                    scanPort(st, in, out, par);
+                    break;
+                case CLOSEPAR:
+                    currToken = st.nextToken();
+                    return;
+                case COMMA:
+                    currToken = st.nextToken();
+                    break;
+                default:
+                    throw new ParseException("unexpected '" + st.value() + "'");
+            }
+        }
+    }
+
+    private void scanPort(VerilogTokenizer st, PortDefinition in, PortDefinition out, ParamDefinition par) throws ParseException, IOException, VerilogTokenizer.TokenizerException {
+        boolean isInput;
+
+        switch (currToken) {
+            case INPUT:
+                isInput = true;
+                currToken = st.nextToken();
+                if (currToken == Token.WIRE
+                    || currToken == Token.LOGIC) {
+                    currToken = st.nextToken();
+                }
+                break;
+            case OUTPUT:
+                isInput = false;
+                currToken = st.nextToken();
+                if (currToken == Token.WIRE
+                        || currToken == Token.REG
+                        || currToken == Token.LOGIC) {
+                    currToken = st.nextToken();
+                }
+                break;
+            default:
+                throw new ParseException("unexpected '" + st.value() + "'");
+        }
+
+        int bits = 1;
+        if (currToken == Token.OPENBRACKET) {
+            match(Token.OPENBRACKET, "", st);
+
+            int rangeStart = 0;
+            int rangeEnd = 0;
+            boolean isPlus = false;
+            boolean isMinus = false;
+
+            do {
+                switch (currToken) {
+                    case IDENT:
+                        String namepar = st.value();
+                        if (isPlus) {
+                            rangeStart += par.getParamVal(namepar);
+                            isPlus = false;
+                        }
+                        else if (isMinus) {
+                            rangeStart -= par.getParamVal(namepar);
+                            isMinus = false;
+                        }
+                        else rangeStart = par.getParamVal(namepar);
+                        currToken = st.nextToken();
+                        break;
+                    case PLUS: 
+                        isPlus = true;
+                        currToken = st.nextToken();
+                        break; 
+                    case MINUS:
+                        isMinus = true;
+                        currToken = st.nextToken();
+                        break;
+                    case NUMBER:
+                        if (isPlus) {
+                            rangeStart += Integer.parseInt(st.value());
+                            isPlus = false;
+                        }
+                        else if (isMinus) {
+                            rangeStart -= Integer.parseInt(st.value());
+                            isMinus = false;
+                        }
+                        else rangeStart = Integer.parseInt(st.value());
+                        currToken = st.nextToken();
+                        break;                        
+                    default: 
+                        break;
+                }
+            } while (currToken != Token.COLON);      
+
+            match(Token.COLON, "':'", st);
+            
+            do {
+                switch (currToken) {
+                    case IDENT:
+                        String namepar = st.value();
+                        if (isPlus) {
+                            rangeEnd += par.getParamVal(namepar);
+                            isPlus = false;
+                        }
+                        else if (isMinus) {
+                            rangeEnd -= par.getParamVal(namepar);
+                            isMinus = false;
+                        }
+                        else rangeEnd = par.getParamVal(namepar);
+                        currToken = st.nextToken();
+                        break;
+                    case PLUS: 
+                        isPlus = true;
+                        currToken = st.nextToken();
+                        break; 
+                    case MINUS:
+                        isMinus = true;
+                        currToken = st.nextToken();
+                        break;
+                    case NUMBER:
+                        if (isPlus) {
+                            rangeEnd += Integer.parseInt(st.value());
+                            isPlus = false;
+                        }
+                        else if (isMinus) {
+                            rangeEnd -= Integer.parseInt(st.value());
+                            isMinus = false;
+                        }
+                        else rangeEnd = Integer.parseInt(st.value());
+                        currToken = st.nextToken();
+                        break;                        
+                    default: 
+                        break;
+                }
+            } while (currToken != Token.CLOSEBRACKET);  
+            
+            match(Token.CLOSEBRACKET, "']'", st);
+
+            bits = rangeStart - rangeEnd + 1;
+        }
+
         String name = st.value();
         match(Token.IDENT, "identifier", st);
 

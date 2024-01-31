@@ -258,6 +258,12 @@ public final class Keys {
             = new Key<>("invertOutput", true);
 
     /**
+     * inverts the output of an inverter
+     */
+    public static final Key<Boolean> INVERT_DRIVER_OUTPUT
+            = new Key<>("invertDriverOutput", false).useTranslationOf(INVERT_OUTPUT).allowGroupEdit();
+
+    /**
      * The real time frequency of the clock
      */
     public static final Key<Integer> FREQUENCY
@@ -803,6 +809,11 @@ public final class Keys {
      */
     public static final Key<String> EXTERNAL_OUTPUTS
             = new Key<>("externalOutputs", "out");
+    /**
+     * The parameters used by the external process
+     */
+    public static final Key<String> EXTERNAL_PARAMETERS
+            = new Key<>("externalParameters", "par");
     /**
      * The code to be executed by the external process
      */

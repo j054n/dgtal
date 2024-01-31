@@ -17,6 +17,7 @@ import java.io.Reader;
 public class VerilogTokenizer {
 
     enum Token {UNKNOWN, MODULE, INPUT, OUTPUT, INOUT, REG, WIRE, ENDMODULE,
+                LOGIC, PARAMETER, HASH, EQ, PLUS, MINUS,
                 EOF, NUMBER, IDENT, OPENPAR, CLOSEPAR, OPENBRACKET, CLOSEBRACKET,
                 SEMICOLON, COLON, COMMA, ERROR};
 
@@ -106,6 +107,10 @@ public class VerilogTokenizer {
                 case ';': return Token.SEMICOLON;
                 case ':': return Token.COLON;
                 case ',': return Token.COMMA;
+                case '#': return Token.HASH;
+                case '=': return Token.EQ;
+                case '+': return Token.PLUS;
+                case '-': return Token.MINUS;
                 case '`':
                     while (ch != '\n' && ch != -1) {
                         ch = readChar();
@@ -161,6 +166,8 @@ public class VerilogTokenizer {
             case "reg": return Token.REG;
             case "wire": return Token.WIRE;
             case "endmodule": return Token.ENDMODULE;
+            case "logic": return Token.LOGIC;
+            case "parameter": return Token.PARAMETER;
             default:
                 return Token.IDENT;
         }

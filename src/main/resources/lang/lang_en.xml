@@ -1574,6 +1574,7 @@
     <string name="key_shapeType_DIL">DIL-Chip</string>
     <string name="key_shapeType_LAYOUT">Layout</string>
     <string name="key_shapeType_CUSTOM">User defined</string>
+    <string name="key_shapeType_MINIMIZED">Downsized Circuit</string>
 
     <string name="key_textOrientation">Orientation</string>
     <string name="key_textOrientation_tt">Position of the coordinate relative to the text.</string>
@@ -1791,6 +1792,11 @@
         If this option is missing, the table is written to stdout.
     </string>
     <string name="cli_errorCreatingStats">Error while creating the stats file!</string>
+
+    <string name="cli_run_noClock">No running clock found in circuit!</string>
+    <string name="cli_errorRunningCircuit">Error running the circuit!</string>
+    <string name="cli_help_run">Runs a circuit headless.</string>
+    <string name="cli_help_run_dig">File name of the circuit.</string>
 
     <string name="menu_window">Windows</string>
     <string name="menu_about">About</string>

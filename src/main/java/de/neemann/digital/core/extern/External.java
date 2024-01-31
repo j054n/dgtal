@@ -38,6 +38,7 @@ public class External extends Node implements Element {
             .addAttribute(Keys.WIDTH)
             .addAttribute(Keys.EXTERNAL_INPUTS)
             .addAttribute(Keys.EXTERNAL_OUTPUTS)
+            .addAttribute(Keys.EXTERNAL_PARAMETERS)
             .addAttribute(Keys.EXTERNAL_CODE)
             .addAttribute(Keys.APPLICATION_TYPE)
             .addAttribute(Keys.GHDL_OPTIONS)
@@ -47,6 +48,7 @@ public class External extends Node implements Element {
     private final Application.Type type;
     private final PortDefinition ins;
     private final PortDefinition outs;
+    private final ParamDefinition pars;
     private final ElementAttributes attr;
     private final ObservableValues outputs;
     private final String label;
@@ -64,6 +66,7 @@ public class External extends Node implements Element {
         this.attr = attr;
         ins = new PortDefinition(attr.get(Keys.EXTERNAL_INPUTS));
         outs = new PortDefinition(attr.get(Keys.EXTERNAL_OUTPUTS));
+        pars = new ParamDefinition(attr.get(Keys.EXTERNAL_PARAMETERS));
         outputs = outs.createOutputs();
         label = attr.getLabel();
         type = attr.get(Keys.APPLICATION_TYPE);

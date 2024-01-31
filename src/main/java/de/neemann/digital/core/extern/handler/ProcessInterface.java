@@ -26,7 +26,7 @@ public interface ProcessInterface extends Closeable {
     void writeValues(ObservableValues values) throws IOException;
 
     /**
-     * Reads values from the externalö process and writes them to the given values
+     * Reads values from the external process and writes them to the given values
      *
      * @param values the values to write to
      * @throws IOException IOException
