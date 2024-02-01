@@ -106,6 +106,7 @@ public class ParamDefinition implements Iterable<Param>, HGSArray {
      *
      * @param name the name
      * @param bits the number of bits
+     * @param val  the value
      */
     public void addParam(String name, int bits, int val) {
         params.add(new Param(name, bits, val));

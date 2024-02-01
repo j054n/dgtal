@@ -60,7 +60,6 @@ public abstract class ApplicationVerilogStdIO implements Application {
      * @param code    the verilog code
      * @param inputs  the inputs
      * @param outputs the outputs
-     * @param parameters the parameters
      * @param root    the projects main folder
      * @return the verilog code
      * @throws HGSEvalException HGSEvalException
@@ -88,7 +87,7 @@ public abstract class ApplicationVerilogStdIO implements Application {
             return false;
         }
         currToken = st.nextToken();
-        return true;   
+        return true;
     }
 
     @Override
@@ -115,8 +114,6 @@ public abstract class ApplicationVerilogStdIO implements Application {
                 scanParamArgs(st, par);
             }
 
-            //attributes.set(Keys.EXTERNAL_PARAMETERS, par.toString());
-        
             match(Token.OPENPAR, "'('", st);
 
             in = new PortDefinition("");
@@ -194,9 +191,7 @@ public abstract class ApplicationVerilogStdIO implements Application {
         }
         String name = st.value();
         match(Token.IDENT, "identifier", st);
-        
         match(Token.EQ, "'='", st);
-        //match(Token.NUMBER, "a number", st);
         int val = Integer.parseInt(st.value());
         par.addParam(name, bits, val);
     }
@@ -264,18 +259,18 @@ public abstract class ApplicationVerilogStdIO implements Application {
                         if (isPlus) {
                             rangeStart += par.getParamVal(namepar);
                             isPlus = false;
-                        }
-                        else if (isMinus) {
+                        } else
+                        if (isMinus) {
                             rangeStart -= par.getParamVal(namepar);
                             isMinus = false;
-                        }
-                        else rangeStart = par.getParamVal(namepar);
+                        } else
+                            rangeStart = par.getParamVal(namepar);
                         currToken = st.nextToken();
                         break;
-                    case PLUS: 
+                    case PLUS:
                         isPlus = true;
                         currToken = st.nextToken();
-                        break; 
+                        break;
                     case MINUS:
                         isMinus = true;
                         currToken = st.nextToken();
@@ -284,21 +279,21 @@ public abstract class ApplicationVerilogStdIO implements Application {
                         if (isPlus) {
                             rangeStart += Integer.parseInt(st.value());
                             isPlus = false;
-                        }
-                        else if (isMinus) {
+                        } else
+                        if (isMinus) {
                             rangeStart -= Integer.parseInt(st.value());
                             isMinus = false;
-                        }
-                        else rangeStart = Integer.parseInt(st.value());
+                        } else
+                            rangeStart = Integer.parseInt(st.value());
                         currToken = st.nextToken();
-                        break;                        
-                    default: 
+                        break;
+                    default:
                         break;
                 }
-            } while (currToken != Token.COLON);      
+            } while (currToken != Token.COLON);
 
             match(Token.COLON, "':'", st);
-            
+
             do {
                 switch (currToken) {
                     case IDENT:
@@ -306,18 +301,18 @@ public abstract class ApplicationVerilogStdIO implements Application {
                         if (isPlus) {
                             rangeEnd += par.getParamVal(namepar);
                             isPlus = false;
-                        }
-                        else if (isMinus) {
+                        } else
+                        if (isMinus) {
                             rangeEnd -= par.getParamVal(namepar);
                             isMinus = false;
-                        }
-                        else rangeEnd = par.getParamVal(namepar);
+                        } else
+                            rangeEnd = par.getParamVal(namepar);
                         currToken = st.nextToken();
                         break;
-                    case PLUS: 
+                    case PLUS:
                         isPlus = true;
                         currToken = st.nextToken();
-                        break; 
+                        break;
                     case MINUS:
                         isMinus = true;
                         currToken = st.nextToken();
@@ -326,19 +321,19 @@ public abstract class ApplicationVerilogStdIO implements Application {
                         if (isPlus) {
                             rangeEnd += Integer.parseInt(st.value());
                             isPlus = false;
-                        }
-                        else if (isMinus) {
+                        } else
+                        if (isMinus) {
                             rangeEnd -= Integer.parseInt(st.value());
                             isMinus = false;
-                        }
-                        else rangeEnd = Integer.parseInt(st.value());
+                        } else
+                            rangeEnd = Integer.parseInt(st.value());
                         currToken = st.nextToken();
-                        break;                        
-                    default: 
+                        break;
+                    default:
                         break;
                 }
-            } while (currToken != Token.CLOSEBRACKET);  
-            
+            } while (currToken != Token.CLOSEBRACKET);
+
             match(Token.CLOSEBRACKET, "']'", st);
 
             bits = rangeStart - rangeEnd + 1;

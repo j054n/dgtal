@@ -1,0 +1,5 @@
+Digital
+
+POM-Version:       1.0-SNAPSHOT
+Build Git Version: 7f44d30-dirty
+Build Time:        2024-02-01 00:52

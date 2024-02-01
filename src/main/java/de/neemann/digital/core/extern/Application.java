@@ -97,7 +97,6 @@ public interface Application {
      * @param code    the code itself
      * @param inputs  the inputs expected by Digital
      * @param outputs the outputs expected by Digital
-     * @param parameters the parameters expected by Digital
      * @param root    the projects main folder
      * @return the ProcessInterface
      * @throws IOException IOException

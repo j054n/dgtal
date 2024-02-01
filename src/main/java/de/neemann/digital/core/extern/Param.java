@@ -22,6 +22,7 @@ public class Param implements HGSMap {
      *
      * @param name the name
      * @param bits the number of bits
+     * @param val the value
      */
     public Param(String name, int bits, int val) {
         this.name = name;
