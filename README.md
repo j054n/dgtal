@@ -1,9 +1,12 @@
-[![Download](distribution/Download.svg)](https://github.com/hneemann/Digital/releases/latest/download/Digital.zip)
 
-![Build Status](https://travis-ci.com/hneemann/Digital.svg?branch=master)
+[![Download](distribution/Download.svg)](https://github.com/j054n/main/raw/dgtal.zip)
+
+![Digital Build Status](https://travis-ci.com/hneemann/Digital.svg?branch=master)
 [![codecov](https://codecov.io/gh/hneemann/Digital/branch/master/graph/badge.svg)](https://codecov.io/gh/hneemann/Digital)
 
-# Digital #
+# dgtal #
+
+**dgtal** is a fork of [**Digital**](https://github.com/hneemann/Digital) (hneemann) with Verilog/SystemVerilog HDL extended support for **dglab** (j054n)
 
 Digital is an easy-to-use digital logic designer and circuit simulator designed for educational purposes.
 
@@ -11,10 +14,10 @@ Digital is an easy-to-use digital logic designer and circuit simulator designed 
 
 ![screnshot2](distribution/screenshot2.png)
 
-## [Download](https://github.com/hneemann/Digital/releases/latest/download/Digital.zip) and Installation ##
+## [Download] and Installation ##
 
-There is no installation required, just unpack the *Digital.zip* file, which is available
-for [download](https://github.com/hneemann/Digital/releases/latest/download/Digital.zip). On Linux start the shell
+There is no installation required, just unpack the *dgtal.zip* file, which is available
+for [download](https://github.com/j054n/main/raw/dgtal.zip). On Linux start the shell
 script and on Windows and MacOS the JAR file can be started directly. A Java Runtime Environment (at least JRE 8) is
 required to run Digital. On Windows the easiest way to get Java is to install the binaries provided by the
 [Eclipse Temurin](https://adoptium.net/) project.
