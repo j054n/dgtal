@@ -3,14 +3,14 @@
 # This script adds a menu item, icons and mime type for Digital for the current
 # user. Based on Arduino install script.
 
-RESOURCE_NAME=digital-simulator
+RESOURCE_NAME=dgtal-simulator
 
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd )
 cd "${SCRIPT_PATH}"
 
 TMP_DIR=`mktemp --directory`
 
-sed -e "s,<EXEC_LOCATION>,${SCRIPT_PATH}/Digital.sh,g" \
+sed -e "s,<EXEC_LOCATION>,${SCRIPT_PATH}/dgtal.sh,g" \
     -e "s,<ICON_LOCATION>,${SCRIPT_PATH}/icon.svg,g" "${SCRIPT_PATH}/linux/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
     
 mkdir -p "${HOME}/.local/share/applications"
