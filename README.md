@@ -16,9 +16,8 @@ Digital is an easy-to-use digital logic designer and circuit simulator designed 
 
 ## [Download] and Installation ##
 
-There is no installation required, just unpack the *dgtal.zip* file, which is available
-for [download](https://github.com/j054n/main/raw/dgtal.zip). On Linux start the shell
-script and on Windows and MacOS the JAR file can be started directly. A Java Runtime Environment (at least JRE 8) is
+There is no installation required, just unpack the *dgtal.zip* file, which is available for [download](https://github.com/j054n/dgtal/main/raw/dgtal.zip). 
+On Linux start the shell script and on Windows and MacOS the JAR file can be started directly. A Java Runtime Environment (at least JRE 8) is
 required to run Digital. On Windows the easiest way to get Java is to install the binaries provided by the
 [Eclipse Temurin](https://adoptium.net/) project.
 
